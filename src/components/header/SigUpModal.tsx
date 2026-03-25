@@ -9,13 +9,13 @@ const SignUpModal = ({ open, handler, goToSignIn }: any) => {
 
     const email = formRef.current[0].value
     const password = formRef.current[1].value
-    const name = formRef.current[2].value
+    const role: number = 1
 
     try {
       setLoading(true)
 
       // 🔥 call backend
-      const res = await fetch("http://localhost:8080/users/register", {
+      const res = await fetch("http://localhost:8080/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -23,7 +23,7 @@ const SignUpModal = ({ open, handler, goToSignIn }: any) => {
         body: JSON.stringify({
           email,
           password,
-          name
+          role
         })
       })
 
@@ -51,11 +51,11 @@ const SignUpModal = ({ open, handler, goToSignIn }: any) => {
         <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 flex flex-col items-center">
 
           <h2 className="text-2xl font-bold text-center mb-6">
-            Login
+            Sign Up you Account
           </h2>
 
           <div className="text-center w-full max-w-sm mx-auto bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs">
-            <form action="#">
+            <form ref={formRef} onSubmit={handleSignUp}>
               <h5 className="text-xl font-semibold text-heading mb-6">Sign up to our platform</h5>
               <div className="mb-4">
                 <label className="block mb-2.5 text-sm font-medium text-heading">Your email</label>
@@ -66,11 +66,6 @@ const SignUpModal = ({ open, handler, goToSignIn }: any) => {
                 <input type="password" id="password" className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body" placeholder="•••••••••" required />
               </div>
               <div className="flex items-start my-6">
-                <div className="flex items-center">
-                  <input id="checkbox-remember" type="checkbox" value="" className="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft" />
-                  <label className="ms-2 text-sm font-medium text-heading"></label>
-                </div>
-                <a href="#" className="ms-auto text-sm font-medium text-fg-brand hover:underline"></a>
               </div>
               <button type="submit" className="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none w-full mb-3">Sign up to your account</button>
               <div className="text-sm font-medium text-body">

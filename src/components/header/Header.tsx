@@ -11,7 +11,7 @@ const SignInModal = ({ open, handler, goToSignUp }: any) => {
 
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault() // 🔥 防止 reload（你原本冇❗）
+    e.preventDefault()
 
     const email = formRef.current[0].value
     const password = formRef.current[1].value
@@ -19,8 +19,8 @@ const SignInModal = ({ open, handler, goToSignUp }: any) => {
     try {
       setLoading(true)
 
-      // 🔥 call backend
-      const res = await fetch("http://localhost:8080/users/login", {
+      // call backend
+      const res = await fetch("http://localhost:8080/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -33,13 +33,14 @@ const SignInModal = ({ open, handler, goToSignUp }: any) => {
       if (!res.ok) {
         throw new Error(data.error || "Login failed")
       }
-
-      // 🔥 set login state（你原本 Context）
+      // set login state
       setAuth({
         email: data.email,
-        displayName: data.name
       })
 
+      localStorage.setItem("token", data.token)
+
+      localStorage.setItem("user", JSON.stringify(data))
       alert("Login success ✅")
       handler()
 
@@ -62,7 +63,7 @@ const SignInModal = ({ open, handler, goToSignUp }: any) => {
           </h2>
 
           <div className="text-center w-full max-w-sm mx-auto bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs">
-            <form action="#">
+            <form ref={formRef} onSubmit={handleLogin}>
               <h5 className="text-xl font-semibold text-heading mb-6">Sign in to our platform</h5>
               <div className="mb-4">
                 <label className="block mb-2.5 text-sm font-medium text-heading">Your email</label>

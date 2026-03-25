@@ -1,43 +1,66 @@
-import type React from "react";
-import { createContext, useState } from "react";
-import { AuthUser, ContextTypes } from "../type/Type";
-
-
+import type React from "react"
+import { createContext, useState, useEffect } from "react"
+import { AuthUser, ContextTypes } from "../type/Type"
 
 export const ContextObj = createContext<ContextTypes>({
   user: "",
-  loginStatus: true,
+  loginStatus: false,
   setAuth: () => { },
   signOut: () => { },
-  auth: { email: "", photoURL: "", displayName: "" }
+  auth: { email: "" }
 })
 
-const ContextProvider: React.FC<{ children: any }> = (props: any) => {
+const ContextProvider: React.FC<{ children: any }> = (props) => {
 
-  const [user, setUser] = useState<ContextTypes['user']>("")
-  const [auth, setAuth] = useState<AuthUser>({ displayName: "", photoURL: "", email: "" })
-  const [signOut, setSignOut] = useState<any>()
-  const [loginStatus, setLoginStatus] = useState<boolean>(true)
+  const [user, setUser] = useState("")
+  const [auth, setAuth] = useState<AuthUser>({ email: "" })
+  const [loginStatus, setLoginStatus] = useState(false)
 
+  // Login（setAuth）
   const runSetAuth = (auth: AuthUser) => {
     setAuth(auth)
+    setUser(auth.email)
+    setLoginStatus(true)
+
+    // persist
+    localStorage.setItem("user", JSON.stringify(auth))
   }
 
-  const runSetSignOut = () => {
+  //  Logout
+  const runSignOut = () => {
+    setAuth({ email: "" })
+    setUser("")
+    setLoginStatus(false)
+
+    localStorage.removeItem("user")
+    localStorage.removeItem("token")
   }
+
+  // App init（auto login）
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user")
+
+    if (storedUser) {
+      const parsed = JSON.parse(storedUser)
+      setAuth(parsed)
+      setUser(parsed.email)
+      setLoginStatus(true)
+    }
+  }, [])
 
   const contextValue: ContextTypes = {
-    user: user,
+    user,
     setAuth: runSetAuth,
-    signOut: runSetSignOut,
-    loginStatus: loginStatus,
-    auth: auth,
-
+    signOut: runSignOut,
+    loginStatus,
+    auth,
   }
 
-  return <ContextObj.Provider value={contextValue}>{props.children}</ContextObj.Provider>
-
-
+  return (
+    <ContextObj.Provider value={contextValue}>
+      {props.children}
+    </ContextObj.Provider>
+  )
 }
 
 export default ContextProvider
