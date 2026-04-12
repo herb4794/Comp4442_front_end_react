@@ -228,7 +228,7 @@ const Item = ({ room, images }: ItemProps) => {
 
       <div className="flex items-center justify-between mt-6">
         <span className="text-3xl font-extrabold text-heading">
-          ${Number(room.price).toFixed(1)}
+          ${Number(room.price).toFixed(1)} to 1 Day
         </span>
 
         <button

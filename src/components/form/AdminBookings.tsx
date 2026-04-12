@@ -1,36 +1,55 @@
-import { useEffect, useState } from "react";
-import { Booking } from "../../type/Type";
+import { useEffect, useMemo, useState } from "react";
+import { Booking, User } from "../../type/Type";
 
 const AdminBookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editCheckIn, setEditCheckIn] = useState("");
   const [editCheckOut, setEditCheckOut] = useState("");
 
-  const fetchAllBookings = async () => {
+  const fetchAllData = async () => {
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:8080/bookings/all", {
-        method: "GET",
-        credentials: "include",
-      });
+      const [bookingRes, userRes] = await Promise.all([
+        fetch("http://localhost:8080/bookings/all", {
+          method: "GET",
+          credentials: "include",
+        }),
+        fetch("http://localhost:8080/admin/users", {
+          method: "GET",
+          credentials: "include",
+        }),
+      ]);
 
-      const data = await res.json();
+      const bookingData = await bookingRes.json();
+      const userData = await userRes.json();
 
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to load all bookings");
+      if (!bookingRes.ok) {
+        throw new Error(bookingData.error || "Failed to load all bookings");
       }
 
-      setBookings(data);
+      if (!userRes.ok) {
+        throw new Error(userData.error || "Failed to load users");
+      }
+
+      setBookings(bookingData);
+      setUsers(userData);
+      console.log(userData)
     } catch (error: any) {
-      alert(error.message || "Failed to load all bookings");
+      alert(error.message || "Failed to load data");
       setBookings([]);
+      setUsers([]);
     } finally {
       setLoading(false);
     }
   };
+
+  const userMap = useMemo(() => {
+    return new Map(users.map((user) => [user.id, user]));
+  }, [users]);
 
   const startEdit = (booking: Booking) => {
     setEditingId(booking.id);
@@ -113,7 +132,7 @@ const AdminBookings = () => {
   };
 
   useEffect(() => {
-    fetchAllBookings();
+    fetchAllData();
   }, []);
 
   return (
@@ -130,6 +149,7 @@ const AdminBookings = () => {
             <thead className="bg-gray-100">
               <tr>
                 <th className="text-left px-4 py-3 border-b">Booking ID</th>
+                <th className="text-left px-4 py-3 border-b">Username</th>
                 <th className="text-left px-4 py-3 border-b">User ID</th>
                 <th className="text-left px-4 py-3 border-b">Room ID</th>
                 <th className="text-left px-4 py-3 border-b">Check-in</th>
@@ -138,73 +158,81 @@ const AdminBookings = () => {
               </tr>
             </thead>
             <tbody>
-              {bookings.map((booking) => (
-                <tr key={booking.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 border-b">{booking.id}</td>
-                  <td className="px-4 py-3 border-b">{booking.userId}</td>
-                  <td className="px-4 py-3 border-b">{booking.roomId}</td>
+              {bookings.map((booking) => {
+                const matchedUser = userMap.get(booking.userId);
+                const username = matchedUser?.email
+                  ? matchedUser.email.split("@")[0]
+                  : `User #${booking.userId}`;
 
-                  <td className="px-4 py-3 border-b">
-                    {editingId === booking.id ? (
-                      <input
-                        type="date"
-                        value={editCheckIn}
-                        onChange={(e) => setEditCheckIn(e.target.value)}
-                        className="border border-gray-300 rounded px-2 py-1"
-                      />
-                    ) : (
-                      booking.checkIn
-                    )}
-                  </td>
+                return (
+                  <tr key={booking.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 border-b">{booking.id}</td>
+                    <td className="px-4 py-3 border-b">{username}</td>
+                    <td className="px-4 py-3 border-b">{booking.userId}</td>
+                    <td className="px-4 py-3 border-b">{booking.roomId}</td>
 
-                  <td className="px-4 py-3 border-b">
-                    {editingId === booking.id ? (
-                      <input
-                        type="date"
-                        value={editCheckOut}
-                        onChange={(e) => setEditCheckOut(e.target.value)}
-                        className="border border-gray-300 rounded px-2 py-1"
-                      />
-                    ) : (
-                      booking.checkOut
-                    )}
-                  </td>
+                    <td className="px-4 py-3 border-b">
+                      {editingId === booking.id ? (
+                        <input
+                          type="date"
+                          value={editCheckIn}
+                          onChange={(e) => setEditCheckIn(e.target.value)}
+                          className="border border-gray-300 rounded px-2 py-1"
+                        />
+                      ) : (
+                        booking.checkIn
+                      )}
+                    </td>
 
-                  <td className="px-4 py-3 border-b space-x-2">
-                    {editingId === booking.id ? (
-                      <>
-                        <button
-                          onClick={() => handleSave(booking.id)}
-                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
-                        >
-                          Save
-                        </button>
-                        <button
-                          onClick={cancelEdit}
-                          className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded"
-                        >
-                          Cancel
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => startEdit(booking)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleCancelBooking(booking.id)}
-                          className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
-                        >
-                          Cancel Booking
-                        </button>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    <td className="px-4 py-3 border-b">
+                      {editingId === booking.id ? (
+                        <input
+                          type="date"
+                          value={editCheckOut}
+                          onChange={(e) => setEditCheckOut(e.target.value)}
+                          className="border border-gray-300 rounded px-2 py-1"
+                        />
+                      ) : (
+                        booking.checkOut
+                      )}
+                    </td>
+
+                    <td className="px-4 py-3 border-b space-x-2">
+                      {editingId === booking.id ? (
+                        <>
+                          <button
+                            onClick={() => handleSave(booking.id)}
+                            className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={cancelEdit}
+                            className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => startEdit(booking)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleCancelBooking(booking.id)}
+                            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                          >
+                            Cancel Booking
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
