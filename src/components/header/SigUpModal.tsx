@@ -4,6 +4,7 @@ const SignUpModal = ({ open, handler, goToSignIn }: any) => {
   const formRef = useRef<any>(null)
   const [loading, setLoading] = useState(false)
 
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
 

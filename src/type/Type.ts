@@ -1,15 +1,35 @@
-import React from "react"
+export type AuthUser = {
+  email: string;
+  role: number;
+};
 
 export type ContextTypes = {
-  user: string
-  setAuth: (auth: AuthUser) => void
-  auth: AuthUser
-  loginStatus: boolean,
-  signOut: () => void
-}
+  user: string;
+  loginStatus: boolean;
+  auth: AuthUser;
+  setAuth: (auth: AuthUser) => void;
+  signOut: () => Promise<void>;
+  checkLoginStatus: () => Promise<void>;
+  loading: boolean;
+};
 
-export type AuthUser = {
-  email: string,
-  displayName: string
-  photoURL?: string
-}
+export type Room = {
+  id: number;
+  title?: string;
+  name?: string;
+  price: number;
+  description?: string;
+};
+export type ItemProps = {
+  room: Room;
+  images: string;
+};
+
+
+export type Booking = {
+  id: number;
+  userId: number;
+  roomId: number;
+  checkIn: string;
+  checkOut: string;
+};

@@ -1,52 +1,83 @@
-import type React from "react"
-import { createContext, useState, useEffect } from "react"
-import { AuthUser, ContextTypes } from "../type/Type"
+import type React from "react";
+import { createContext, useState, useEffect } from "react";
+import { AuthUser, ContextTypes } from "../type/Type";
 
 export const ContextObj = createContext<ContextTypes>({
   user: "",
   loginStatus: false,
   setAuth: () => { },
-  signOut: () => { },
-  auth: { email: "" }
-})
+  signOut: async () => { },
+  auth: { email: "", role: 1 },
+  checkLoginStatus: async () => { },
+  loading: true,
+});
 
-const ContextProvider: React.FC<{ children: any }> = (props) => {
+const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState("");
+  const [auth, setAuthState] = useState<AuthUser>({ email: "", role: 1 });
+  const [loginStatus, setLoginStatus] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [user, setUser] = useState("")
-  const [auth, setAuth] = useState<AuthUser>({ email: "" })
-  const [loginStatus, setLoginStatus] = useState(false)
+  const runSetAuth = (authData: AuthUser) => {
+    setAuthState(authData);
+    setUser(authData.email);
+    setLoginStatus(!!authData.email);
+  };
 
-  // Login（setAuth）
-  const runSetAuth = (auth: AuthUser) => {
-    setAuth(auth)
-    setUser(auth.email)
-    setLoginStatus(true)
+  const clearAuth = () => {
+    setAuthState({ email: "", role: 1 });
+    setUser("");
+    setLoginStatus(false);
+  };
 
-    // persist
-    localStorage.setItem("user", JSON.stringify(auth))
-  }
+  const checkLoginStatus = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/me", {
+        method: "GET",
+        credentials: "include",
+      });
 
-  //  Logout
-  const runSignOut = () => {
-    setAuth({ email: "" })
-    setUser("")
-    setLoginStatus(false)
+      if (!res.ok) {
+        clearAuth();
+        return;
+      }
 
-    localStorage.removeItem("user")
-    localStorage.removeItem("token")
-  }
+      const data = await res.json();
 
-  // App init（auto login）
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user")
-
-    if (storedUser) {
-      const parsed = JSON.parse(storedUser)
-      setAuth(parsed)
-      setUser(parsed.email)
-      setLoginStatus(true)
+      runSetAuth({
+        email: data.email,
+        role: data.role,
+      });
+    } catch (error) {
+      clearAuth();
     }
-  }, [])
+  };
+
+  const runSignOut = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/signout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      const status = await res.json()
+      console.log(status.message)
+
+    } catch (error) {
+      console.error("Sign out failed:", error);
+    } finally {
+      clearAuth();
+    }
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      await checkLoginStatus();
+      setLoading(false);
+    };
+
+    init();
+  }, []);
 
   const contextValue: ContextTypes = {
     user,
@@ -54,13 +85,15 @@ const ContextProvider: React.FC<{ children: any }> = (props) => {
     signOut: runSignOut,
     loginStatus,
     auth,
-  }
+    checkLoginStatus,
+    loading,
+  };
 
   return (
     <ContextObj.Provider value={contextValue}>
-      {props.children}
+      {children}
     </ContextObj.Provider>
-  )
-}
+  );
+};
 
-export default ContextProvider
+export default ContextProvider;
