@@ -3,6 +3,7 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ContextObj } from '../../store/Context'
 import SignUpModal from './SigUpModal'
+import toast from 'react-hot-toast'
 
 const SignInModal = ({ open, handler, goToSignUp }: any) => {
 
@@ -45,10 +46,10 @@ const SignInModal = ({ open, handler, goToSignUp }: any) => {
         role: data.role,
       });
 
-      alert("Login success ✅");
+      toast.success("Login success ✅");
       handler();
     } catch (error: any) {
-      alert(error.message || "Login failed");
+      toast.error(error.message || "Login failed");
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ContextObj } from "../../store/Context";
 import { ItemProps } from "../../type/Type";
+import toast from "react-hot-toast";
 
 const Item = ({ room, images }: ItemProps) => {
   const { loginStatus } = useContext(ContextObj);
@@ -69,22 +70,22 @@ const Item = ({ room, images }: ItemProps) => {
 
   const handleBookNow = async () => {
     if (!loginStatus) {
-      alert("Please login first");
+      toast.error("Please login first");
       return;
     }
 
     if (!checkIn || !checkOut) {
-      alert("Please select check-in and check-out dates");
+      toast.error("Please select check-in and check-out dates");
       return;
     }
 
     if (new Date(checkIn) >= new Date(checkOut)) {
-      alert("Check-out must be after check-in");
+      toast.error("Check-out must be after check-in");
       return;
     }
 
     if (isAvailable === false) {
-      alert("This date range is already booked");
+      toast.error("This date range is already booked");
       return;
     }
 
@@ -116,13 +117,13 @@ const Item = ({ room, images }: ItemProps) => {
         throw new Error(data.error || "Booking failed");
       }
 
-      alert("Booking success ✅");
+      toast.success("Booking success ✅");
       setCheckIn("");
       setCheckOut("");
       setIsAvailable(null);
       setAvailabilityMsg("");
     } catch (error: any) {
-      alert(error.message || "Booking failed");
+      toast.error(error.message || "Booking failed");
     } finally {
       setLoading(false);
     }

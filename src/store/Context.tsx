@@ -1,6 +1,7 @@
 import type React from "react";
 import { createContext, useState, useEffect } from "react";
 import { AuthUser, ContextTypes } from "../type/Type";
+import toast from "react-hot-toast";
 
 export const ContextObj = createContext<ContextTypes>({
   user: "",
@@ -61,7 +62,7 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
       });
 
       const status = await res.json()
-      console.log(status.message)
+      toast.success(status.message)
 
     } catch (error) {
       console.error("Sign out failed:", error);

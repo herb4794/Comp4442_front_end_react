@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Booking } from "../../type/Type";
+import toast from "react-hot-toast";
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -22,7 +23,7 @@ const MyBookings = () => {
 
       setBookings(data);
     } catch (error: any) {
-      alert(error.message || "Failed to load bookings");
+      toast.error(error.message || "Failed to load bookings");
       setBookings([]);
     } finally {
       setLoading(false);
@@ -45,10 +46,10 @@ const MyBookings = () => {
         throw new Error(data.error || "Failed to cancel booking");
       }
 
-      alert("Booking cancelled ✅");
+      toast.success("Booking cancelled ✅");
       setBookings((prev) => prev.filter((booking) => booking.id !== bookingId));
     } catch (error: any) {
-      alert(error.message || "Failed to cancel booking");
+      toast.error(error.message || "Failed to cancel booking");
     }
   };
 

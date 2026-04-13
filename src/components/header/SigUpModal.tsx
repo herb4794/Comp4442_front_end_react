@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react'
+import toast from 'react-hot-toast'
 
 const SignUpModal = ({ open, handler, goToSignIn }: any) => {
   const formRef = useRef<any>(null)
@@ -34,11 +35,11 @@ const SignUpModal = ({ open, handler, goToSignIn }: any) => {
         throw new Error(data.error || "Signup failed")
       }
 
-      alert("Signup success ✅")
+      toast.success("Signup success ✅")
       handler()
 
     } catch (error: any) {
-      alert(error.message)
+      toast.error(error.message)
     } finally {
       setLoading(false)
     }
