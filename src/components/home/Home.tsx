@@ -5,16 +5,20 @@ import room3 from "../../assets/room/room3.jpeg";
 import room4 from "../../assets/room/room4.jpeg";
 import room5 from "../../assets/room/room5.jpeg";
 import room6 from "../../assets/room/room6.jpeg";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../header/Header";
 import Item from "../room/Item";
 import { Room } from "../../type/Type";
+import { ContextObj } from "../../store/Context";
 
 const roomImages = [room1, room2, room3, room4, room5, room6]
 
 const Home = () => {
+  const { loginStatus, user } = useContext(ContextObj)
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showUser, setShowUser] = useState<string>()
+
 
   const fetchRooms = async () => {
     try {
@@ -37,7 +41,8 @@ const Home = () => {
 
   useEffect(() => {
     fetchRooms();
-  }, []);
+    setShowUser(user.split("@")[0])
+  }, [loginStatus]);
 
   return (
     <div className="min-h-screen">
@@ -45,7 +50,7 @@ const Home = () => {
 
       <div className="bg-white py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-3xl font-bold">Booking System</h2>
+          <h2 className="text-3xl font-bold">Booking System {loginStatus ? <div>Welcome {showUser}</div> : null}</h2>
 
           {loading ? (
             <p className="mt-10">Loading rooms...</p>

@@ -148,7 +148,7 @@ const Header = () => {
 
       <nav className="bg-neutral-primary fixed w-full z-20 top-0 start-0 border-b border-default">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <div  className="flex items-center space-x-3 rtl:space-x-reverse">
+          <div className="flex items-center space-x-3 rtl:space-x-reverse">
             <img src={playIcon} className="h-7" alt="Flowbite Logo" />
             <span className="self-center text-xl text-heading font-semibold whitespace-nowrap">Comp4442 Playroom System</span>
           </div>

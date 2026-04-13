@@ -1,15 +1,18 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./components/home/Home";
-import ProtectedAdminRoute from "./controller/ProtectedAdminRoute";
 import BookingPage from "./components/form/BookingPage";
+
+const Home = lazy(() => import("./components/home/Home"));
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/booking" element={<BookingPage />} />
-      </Routes>
+      <Suspense fallback={<div className="p-6">Loading page...</div>}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/booking" element={<BookingPage />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }
