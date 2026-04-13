@@ -147,7 +147,7 @@ const Header = () => {
 
 
       <nav className="bg-neutral-primary fixed w-full z-20 top-0 start-0 border-b border-default">
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <div className="relative max-w-screen-xl flex items-center justify-between mx-auto p-4">
           <div className="flex items-center space-x-3 rtl:space-x-reverse">
             <img src={playIcon} className="h-7" alt="Flowbite Logo" />
             <span className="self-center text-xl text-heading font-semibold whitespace-nowrap">Comp4442 Playroom System</span>
@@ -168,7 +168,8 @@ const Header = () => {
               <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M5 7h14M5 12h14M5 17h14" /></svg>
             </button>
           </div>
-          <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-cta">
+          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center"
+            id="navbar-cta">
             <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-default rounded-base bg-neutral-secondary-soft md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-neutral-primary">
               <li>
                 <Link to="/" className="block py-2 px-3 text-white bg-brand rounded md:bg-transparent md:text-fg-brand md:p-0" aria-current="page">Home</Link>
