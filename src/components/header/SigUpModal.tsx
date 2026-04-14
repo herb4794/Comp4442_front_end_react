@@ -35,7 +35,7 @@ const SignUpModal = ({ open, handler, goToSignIn }: any) => {
         throw new Error(data.error || "Signup failed")
       }
 
-      toast.success("Signup success ✅")
+      toast.success("Signup success")
       handler()
 
     } catch (error: any) {

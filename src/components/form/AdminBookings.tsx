@@ -1,12 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { Booking } from "../../type/Type";
+import { Booking, User } from "../../type/Type";
 import toast from "react-hot-toast";
 
-type User = {
-  id: number;
-  email: string;
-  role: number;
-};
 
 const getUsernameFromEmail = (email?: string) => {
   if (!email) return "";
@@ -199,7 +194,7 @@ const AdminBookings = () => {
         )
       );
 
-      toast.success("Booking updated ✅");
+      toast.success("Booking updated");
       cancelEdit();
     } catch (error: any) {
       toast.error(error.message || "Failed to update booking");
@@ -223,7 +218,7 @@ const AdminBookings = () => {
       }
 
       setBookings((prev) => prev.filter((booking) => booking.id !== bookingId));
-      toast.success("Booking cancelled ✅");
+      toast.success("Booking cancelled");
     } catch (error: any) {
       toast.error(error.message || "Failed to cancel booking");
     }

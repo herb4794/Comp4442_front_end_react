@@ -117,7 +117,7 @@ const Item = ({ room, images }: ItemProps) => {
         throw new Error(data.error || "Booking failed");
       }
 
-      toast.success("Booking success ✅");
+      toast.success("Booking success");
       setCheckIn("");
       setCheckOut("");
       setIsAvailable(null);

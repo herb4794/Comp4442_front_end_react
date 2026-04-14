@@ -23,8 +23,6 @@ const BookingPage = () => {
     <div>
       <Header />
       <div className="max-w-6xl mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6">Bookings</h1>
-
         {auth.role === 0 ? <AdminBookings /> : <MyBookings />}
       </div>
     </div>

@@ -46,7 +46,7 @@ const SignInModal = ({ open, handler, goToSignUp }: any) => {
         role: data.role,
       });
 
-      toast.success("Login success ✅");
+      toast.success("Login success");
       handler();
     } catch (error: any) {
       toast.error(error.message || "Login failed");
