@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { ContextObj } from "../../store/Context";
 import { ItemProps } from "../../type/Type";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Item = ({ room, images }: ItemProps) => {
   const { loginStatus } = useContext(ContextObj);
+  const navigate = useNavigate();
 
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
@@ -139,7 +141,8 @@ const Item = ({ room, images }: ItemProps) => {
   return (
     <div className="w-full max-w-sm bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs">
       <div className="mb-6">
-        <img className="h-48 w-full rounded-base bg-gray-200 flex items-center justify-center text-gray-500" src={images}>
+        <img className="h-48 w-full rounded-base bg-gray-200 flex items-center justify-center text-gray-500" src={images} onClick={() =>
+          navigate(`/rooms/${room.id}`, { state: { room, image: images } })}>
         </img>
       </div>
 
@@ -229,7 +232,7 @@ const Item = ({ room, images }: ItemProps) => {
 
       <div className="flex items-center justify-between mt-6">
         <span className="text-3xl font-extrabold text-heading">
-          ${Number(room.price).toFixed(1)} to 1 Day
+          ${Number(room.price).toFixed(1)} / Day
         </span>
 
         <button
@@ -237,8 +240,8 @@ const Item = ({ room, images }: ItemProps) => {
           onClick={handleBookNow}
           disabled={isBookDisabled}
           className={`inline-flex items-center text-white box-border border border-transparent shadow-xs font-medium leading-5 rounded-base text-sm px-3 py-2 focus:outline-none ${isBookDisabled
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-brand hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium"
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-brand hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium"
             }`}
         >
           {loading

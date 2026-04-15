@@ -29,7 +29,6 @@ const Home = () => {
         throw new Error("Failed to load rooms");
       }
 
-      console.log(data)
       setRooms(data);
     } catch (error) {
       console.error(error);

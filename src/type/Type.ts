@@ -25,7 +25,6 @@ export type ItemProps = {
   images: string;
 };
 
-
 export type Booking = {
   id: number;
   userId: number;
@@ -39,3 +38,8 @@ export type User = {
   email: string;
   role: number;
 };
+
+export type LocationState = {
+  room?: Room;
+  image?: string;
+}
