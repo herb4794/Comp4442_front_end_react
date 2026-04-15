@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import BookingPage from "./components/form/BookingPage";
 import { Toaster } from "react-hot-toast";
 import RoomDetailPage from "./components/room/RoomDetailPage";
+import ForgotPasswordPage from "./components/form/ForgotPasswordPage";
 
 const Home = lazy(() => import("./components/home/Home"));
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/rooms/:id" element={<RoomDetailPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Routes>
       </Suspense>
     </Router>
