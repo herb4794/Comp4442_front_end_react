@@ -19,7 +19,7 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const [auth, setAuthState] = useState<AuthUser>({ email: "", role: 1 });
   const [loginStatus, setLoginStatus] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [api, setApi] = useState<any>("https://43.198.116.32:8080")
+  const [api, setApi] = useState<any>("http://43.198.116.32:8080")
 
   const runSetAuth = (authData: AuthUser) => {
     setAuthState(authData);
@@ -35,7 +35,7 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   const checkLoginStatus = async () => {
     try {
-      const res = await fetch("http://43.198.116.32:8080/me", {
+      const res = await fetch(`${api}/me`, {
         method: "GET",
         credentials: "include",
       });
