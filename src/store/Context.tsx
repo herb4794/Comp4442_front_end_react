@@ -19,7 +19,7 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const [auth, setAuthState] = useState<AuthUser>({ email: "", role: 1 });
   const [loginStatus, setLoginStatus] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [api, setApi] = useState<any>("http://43.198.116.32:8080")
+  const [api, setApi] = useState<any>("https://api.polyucomp4442-g12.ccwu.cc")
 
   const runSetAuth = (authData: AuthUser) => {
     setAuthState(authData);
