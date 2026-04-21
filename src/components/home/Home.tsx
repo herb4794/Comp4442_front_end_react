@@ -18,11 +18,12 @@ const Home = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [showUser, setShowUser] = useState<string>()
+  const { api } = useContext(ContextObj)
 
 
   const fetchRooms = async () => {
     try {
-      const res = await fetch("http://localhost:8080/rooms");
+      const res = await fetch(`${api}/rooms`);
       const data = await res.json();
 
       if (!res.ok) {

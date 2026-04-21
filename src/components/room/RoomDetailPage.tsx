@@ -18,7 +18,7 @@ const RoomDetailPage = () => {
   const { id } = useParams();
   const location = useLocation();
   const state = (location.state as LocationState | null) ?? null;
-  const { loginStatus } = useContext(ContextObj);
+  const { loginStatus, api } = useContext(ContextObj);
 
   const [room, setRoom] = useState<Room | null>(state?.room ?? null);
   const [image, setImage] = useState<string>(state?.image ?? "");
@@ -46,7 +46,7 @@ const RoomDetailPage = () => {
 
       try {
         setPageLoading(true);
-        const res = await fetch("http://localhost:8080/rooms");
+        const res = await fetch(`${api}/rooms`);
         const data: Room[] = await res.json();
 
         console.log(data)
@@ -97,7 +97,7 @@ const RoomDetailPage = () => {
         setCheckingAvailability(true);
 
         const res = await fetch(
-          `http://localhost:8080/bookings/check?roomId=${room.id}&checkIn=${checkIn}&checkOut=${checkOut}`,
+          `${api}/bookings/check?roomId=${room.id}&checkIn=${checkIn}&checkOut=${checkOut}`,
           {
             method: "GET",
             credentials: "include",
@@ -149,7 +149,7 @@ const RoomDetailPage = () => {
     try {
       setBookingLoading(true);
 
-      const res = await fetch("http://localhost:8080/bookings", {
+      const res = await fetch(`${api}/bookings`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -302,9 +302,8 @@ const RoomDetailPage = () => {
 
               {!checkingAvailability && availabilityMsg && (
                 <p
-                  className={`text-sm mb-3 ${
-                    isAvailable === false ? "text-red-600" : "text-green-600"
-                  }`}
+                  className={`text-sm mb-3 ${isAvailable === false ? "text-red-600" : "text-green-600"
+                    }`}
                 >
                   {availabilityMsg}
                 </p>
@@ -330,8 +329,8 @@ const RoomDetailPage = () => {
                 {bookingLoading
                   ? "Booking..."
                   : checkingAvailability
-                  ? "Checking..."
-                  : "Book now"}
+                    ? "Checking..."
+                    : "Book now"}
               </button>
             </div>
           </div>

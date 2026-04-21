@@ -11,6 +11,7 @@ export type ContextTypes = {
   signOut: () => Promise<void>;
   checkLoginStatus: () => Promise<void>;
   loading: boolean;
+  api: string;
 };
 
 export type Room = {

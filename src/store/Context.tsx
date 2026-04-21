@@ -11,6 +11,7 @@ export const ContextObj = createContext<ContextTypes>({
   auth: { email: "", role: 1 },
   checkLoginStatus: async () => { },
   loading: true,
+  api: ""
 });
 
 const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -18,6 +19,7 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const [auth, setAuthState] = useState<AuthUser>({ email: "", role: 1 });
   const [loginStatus, setLoginStatus] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [api, setApi] = useState<any>("https://43.198.116.32:8080")
 
   const runSetAuth = (authData: AuthUser) => {
     setAuthState(authData);
@@ -33,7 +35,7 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   const checkLoginStatus = async () => {
     try {
-      const res = await fetch("http://localhost:8080/me", {
+      const res = await fetch("http://43.198.116.32:8080/me", {
         method: "GET",
         credentials: "include",
       });
@@ -56,7 +58,7 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   const runSignOut = async () => {
     try {
-      const res = await fetch("http://localhost:8080/signout", {
+      const res = await fetch(`${api}/signout`, {
         method: "POST",
         credentials: "include",
       });
@@ -88,6 +90,7 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     auth,
     checkLoginStatus,
     loading,
+    api: api,
   };
 
   return (

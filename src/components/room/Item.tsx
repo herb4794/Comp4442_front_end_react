@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const Item = ({ room, images }: ItemProps) => {
-  const { loginStatus } = useContext(ContextObj);
+  const { loginStatus, api } = useContext(ContextObj);
   const navigate = useNavigate();
 
   const [checkIn, setCheckIn] = useState("");
@@ -43,7 +43,7 @@ const Item = ({ room, images }: ItemProps) => {
         setCheckingAvailability(true);
 
         const res = await fetch(
-          `http://localhost:8080/bookings/check?roomId=${room.id}&checkIn=${checkIn}&checkOut=${checkOut}`,
+          `${api}/bookings/check?roomId=${room.id}&checkIn=${checkIn}&checkOut=${checkOut}`,
           {
             method: "GET",
             credentials: "include",
@@ -99,7 +99,7 @@ const Item = ({ room, images }: ItemProps) => {
       console.log("sending checkIn:", checkIn);
       console.log("sending checkOut:", checkOut);
 
-      const res = await fetch("http://localhost:8080/bookings", {
+      const res = await fetch(`${api}/bookings`, {
         method: "POST",
         credentials: "include",
         headers: {

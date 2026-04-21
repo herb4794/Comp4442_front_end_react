@@ -8,8 +8,9 @@ import toast from 'react-hot-toast'
 const SignInModal = ({ open, handler, goToSignUp }: any) => {
 
   const formRef = useRef<HTMLFormElement | null>(null);
-  const { setAuth, loginStatus } = useContext(ContextObj);
+  const { setAuth, loginStatus, api } = useContext(ContextObj);
   const [loading, setLoading] = useState(false);
+
 
   if (!open) return null;
 
@@ -26,7 +27,7 @@ const SignInModal = ({ open, handler, goToSignUp }: any) => {
 
       setLoading(true);
 
-      const res = await fetch("http://localhost:8080/login", {
+      const res = await fetch(`${api}/login`, {
         method: "POST",
         credentials: "include",
         headers: {

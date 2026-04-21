@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Booking } from "../../type/Type";
+import { ContextObj } from "../../store/Context";
 
 const getBookingStatus = (checkIn: string, checkOut: string) => {
   const today = new Date();
@@ -37,11 +38,13 @@ const MyBookings = () => {
   const [roomFilter, setRoomFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
+  const { api } = useContext(ContextObj)
+
   const fetchMyBookings = async () => {
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:8080/bookings/my", {
+      const res = await fetch(`${api}/bookings/my`, {
         method: "GET",
         credentials: "include",
       });
@@ -66,7 +69,7 @@ const MyBookings = () => {
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/bookings/${bookingId}`, {
+      const res = await fetch(`${api}/bookings/${bookingId}`, {
         method: "DELETE",
         credentials: "include",
       });

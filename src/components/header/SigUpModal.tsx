@@ -1,9 +1,11 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
+import { ContextObj } from '../../store/Context'
 
 const SignUpModal = ({ open, handler, goToSignIn }: any) => {
   const formRef = useRef<any>(null)
   const [loading, setLoading] = useState(false)
+  const { api } = useContext(ContextObj)
 
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -17,7 +19,7 @@ const SignUpModal = ({ open, handler, goToSignIn }: any) => {
       setLoading(true)
 
       // 🔥 call backend
-      const res = await fetch("http://localhost:8080/register", {
+      const res = await fetch(`${api}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Booking, User } from "../../type/Type";
 import toast from "react-hot-toast";
+import { ContextObj } from "../../store/Context";
 
 
 const getUsernameFromEmail = (email?: string) => {
@@ -47,17 +48,18 @@ const AdminBookings = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [roomFilter, setRoomFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  const { api } = useContext(ContextObj)
 
   const fetchAllData = async () => {
     try {
       setLoading(true);
 
       const [bookingRes, userRes] = await Promise.all([
-        fetch("http://localhost:8080/bookings/all", {
+        fetch(`${api}/bookings/all`, {
           method: "GET",
           credentials: "include",
         }),
-        fetch("http://localhost:8080/admin/users", {
+        fetch(`${api}/admin/users`, {
           method: "GET",
           credentials: "include",
         }),
@@ -168,7 +170,7 @@ const AdminBookings = () => {
     }
 
     try {
-      const res = await fetch(`http://localhost:8080/bookings/${bookingId}`, {
+      const res = await fetch(`${api}/bookings/${bookingId}`, {
         method: "PUT",
         credentials: "include",
         headers: {
@@ -206,7 +208,7 @@ const AdminBookings = () => {
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/bookings/${bookingId}`, {
+      const res = await fetch(`${api}/bookings/${bookingId}`, {
         method: "DELETE",
         credentials: "include",
       });

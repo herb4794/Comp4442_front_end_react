@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Header from "../header/Header";
+import { ContextObj } from "../../store/Context";
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
@@ -15,13 +16,15 @@ const ForgotPasswordPage = () => {
   const [loading, setLoading] = useState(false);
   const [generatedToken, setGeneratedToken] = useState("");
 
+  const { api } = useContext(ContextObj)
+
   const handleGenerateToken = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:8080/forgot-password", {
+      const res = await fetch(`${api}/forgot-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +59,7 @@ const ForgotPasswordPage = () => {
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:8080/reset-password", {
+      const res = await fetch(`${api}/reset-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
